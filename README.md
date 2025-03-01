@@ -82,5 +82,5 @@ Obtiene los balances de las direcciones de Ethereum y Bitcoin.
 ```
 
 ## 📜 Licencia
-Este proyecto está bajo la licencia MIT. 😃
+Este proyecto está bajo la licencia MIT.
 
