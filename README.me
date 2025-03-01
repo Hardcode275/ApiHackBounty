@@ -1,0 +1,88 @@
+# ApiHackBounty
+
+ApiHackBounty es una API que permite obtener los balances de direcciones de Ethereum y Bitcoin utilizando las APIs de Etherscan y Blockchair.(esta aun en proceso, faltan aun mas conexiones con Apis.)
+
+## Requisitos
+
+- Node.js (v14 o superior)
+- npm (v6 o superior)
+
+## Instalación
+
+1. Clona el repositorio:
+
+    ```sh
+    git clone https://github.com/tu-usuario/ApiHackBounty.git
+    cd ApiHackBounty
+    ```
+
+2. Instala las dependencias:
+
+    ```sh
+    npm install
+    ```
+
+3. Crea un archivo [.env](http://_vscodecontentref_/0) en la raíz del proyecto y agrega tu clave de API de Etherscan:
+
+    ```env
+    ETHERSCAN_API_KEY=tu_clave_de_api_de_etherscan
+    ```
+
+4. Asegúrate de tener un archivo JSON con las direcciones en la carpeta [json](http://_vscodecontentref_/1) con el nombre `data.json`. El archivo debe tener la siguiente estructura:
+
+    ```json
+    {
+        "0221": {
+            "eth": [
+                "0x...",
+                "0x...",
+                ...
+            ],
+            "btc": [
+                "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+                "1BoatSLRHtKNngkdXEeobR76b53LETtpyT",
+                ...
+            ]
+        }
+    }
+    ```
+
+## Uso
+
+1. Inicia el servidor:
+
+    ```sh
+    npm start
+    ```
+
+2. Accede al endpoint para obtener los balances de las wallets:
+
+    ```sh
+    http://localhost:3000/top-wallets
+    ```
+
+## Endpoints
+
+### GET /top-wallets
+
+Obtiene los balances de las direcciones de Ethereum y Bitcoin.
+
+#### Respuesta
+
+```json
+{
+    "ethereum": [
+        {
+            "address": "0x...",
+            "balance": 1.234
+        },
+        ...
+    ],
+    "bitcoin": [
+        {
+            "address": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+            "balance": 0.567
+        },
+        ...
+    ]
+}

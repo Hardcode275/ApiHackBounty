@@ -3,25 +3,24 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const Bottleneck = require('bottleneck');
+const fs = require('fs');
+const path = require('path');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const HACKSCAN_URL = "https://hackscan.hackbounty.io/public/hack-address.json";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 const ETHERSCAN_URL = "https://api.etherscan.io/api";
 
-// Verificar que las variables de entorno están cargadas
 console.log("ETHERSCAN_API_KEY:", ETHERSCAN_API_KEY);
 console.log("PORT:", PORT);
 
-// Habilitar CORS
 app.use(cors());
 
-// Limitar el número de solicitudes simultáneas a la API de Etherscan
 const limiter = new Bottleneck({
-    maxConcurrent: 5, // Número máximo de solicitudes simultáneas
-    minTime: 250 // Tiempo mínimo entre solicitudes en ms (4 solicitudes por segundo)
+    maxConcurrent: 1, // Número máximo de solicitudes simultáneas
+    minTime: 300    // Tiempo mínimo entre solicitudes (ms)
 });
 
 // Función para obtener el balance de una dirección
@@ -35,7 +34,7 @@ async function getEthereumBalance(address) {
                 tag: "latest",
                 apikey: ETHERSCAN_API_KEY
             },
-            timeout: 20000 // Aumentar el tiempo de espera a 20 segundos
+            timeout: 20000 
         });
 
         if (response.data.status !== "1") {
@@ -45,7 +44,7 @@ async function getEthereumBalance(address) {
 
         return {
             address,
-            balance: response.data.result / 1e18 // Convertir Wei a ETH
+            balance: response.data.result / 1e18 // Convertir el balance a Ether
         };
     } catch (error) {
         console.error(`Error obteniendo balance de ${address}:`, error.message);
@@ -57,13 +56,16 @@ async function getEthereumBalance(address) {
 // Endpoint para obtener los balances de las wallets
 app.get('/top-wallets', async (req, res) => {
     try {
-        console.log("Fetching addresses from Hackscan...");
-        const hackscanResponse = await axios.get(HACKSCAN_URL);
-        const addresses = hackscanResponse.data;
+        console.log("Cargando direcciones desde el archivo JSON...");
+        const filePath = path.join(__dirname, 'json', 'data.json');
+        const data = fs.readFileSync(filePath, 'utf8');
+        const addresses = JSON.parse(data);
         console.log("Addresses received:", addresses);
 
-        // Extraer las direcciones de Ethereum
-        const ethAddresses = addresses['0221'].eth;
+        // Extraer y filtrar las direcciones de Ethereum
+        const ethAddresses = addresses['0221'].eth.slice(0, 1000); /**
+        en esta parte se filtra las solicitudes deseadas si uno desea poder ver aun mas recordar mover 
+        el maximo de solicitudes esperadas y el tiempo maximo de respuesta sino la etherscan dara error*/
         console.log("Ethereum addresses:", ethAddresses);
 
         // Verificar si la respuesta es un array
