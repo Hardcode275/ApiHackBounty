@@ -56,6 +56,8 @@ ApiHackBounty es una API en desarrollo que permite obtener los balances de direc
 2. **Accede a los endpoints disponibles:**
     ```
     http://localhost:3000/top-wallets
+    http://localhost:3000/track-address/0xYourEthereumAddress
+    
     ```
 
 ## 🔗 Endpoints
@@ -80,6 +82,39 @@ Obtiene los balances de las direcciones de Ethereum y Bitcoin.
     ]
 }
 ```
+
+##📌 `GET /track-address/:address`
+
+Rastrea una dirección específica de Ethereum y obtiene su balance y transacciones.
+
+```
+{
+    "balance": {
+        "address": "0xYourEthereumAddress",
+        "balance": 1.234
+    },
+    "transactions": [
+        {
+            "blockNumber": "1234567",
+            "timeStamp": "1609459200",
+            "hash": "0x...",
+            "from": "0x...",
+            "to": "0xYourEthereumAddress",
+            "value": "1234567890000000000",
+            "gas": "21000",
+            "gasPrice": "1000000000",
+            "isError": "0",
+            "txreceipt_status": "1",
+            "input": "0x",
+            "contractAddress": "",
+            "cumulativeGasUsed": "21000",
+            "gasUsed": "21000",
+            "confirmations": "10"
+        }
+    ]
+}
+```
+
 
 ## 📜 Licencia
 Este proyecto está bajo la licencia MIT.
